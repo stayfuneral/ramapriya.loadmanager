@@ -46,3 +46,5 @@ if(file_exists($includeFile)) {
 }
 ```
 
+[Подробный разбор модуля на Хабре](https://habr.com/ru/post/509474/)
+
