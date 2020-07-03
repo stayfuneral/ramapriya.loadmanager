@@ -4,11 +4,24 @@ namespace Ramapriya\LoadManager;
 
 use Bitrix\Main\Loader;
 
+/**
+ * @package Autoload
+ * @author Ramapriya Doom
+ */
+
 class Autoload
 {
+    /**
+     * scan lib directory
+     * 
+     * @param string $dir
+     * 
+     * @return array
+     */
     
-    public static function scanDirectory($dir, $folders = [])
+    public static function scanDirectory(string $dir) : array
     {
+        $result = [];
         $scanner = scandir($dir);
         foreach ($scanner as $scan) {
             switch ($scan) {
@@ -22,20 +35,30 @@ class Autoload
     
                     if($SplFileInfo->isFile()) {
     
-                        $folders[] = $scan;
+                        $result[] = $scan;
                         
                     } elseif ($SplFileInfo->isDir()) {
                         
-                        $folders[$scan] = self::scanDirectory($item, $folders[$scan]);
+                        $result[$scan] = self::scanDirectory($item, $result[$scan]);
     
                     }
             }
         }
     
-        return $folders;
+        return $result;
     }
 
-    public static function setAutoloadClassesArray(string $directory, string $defaultNamespace, array $excludeFiles)
+    /**
+     * Prepare array for autoload
+     * 
+     * @param string $directory
+     * @param string $defaultNamespace
+     * @param array $excludeFiles
+     * 
+     * @return array
+     */
+
+    public static function setAutoloadClassesArray(string $directory, string $defaultNamespace, array $excludeFiles) : array
     {
         $result = [];    
         $scanner = self::scanDirectory($directory);
@@ -88,7 +111,14 @@ class Autoload
         return $result;
     }
 
-    public static function loadClasses($classes, $moduleId = null)
+    /**
+     * Load prepared classes from array
+     * 
+     * @param array $classes
+     * @param $moduleId
+     */
+
+    public static function loadClasses(array $classes, $moduleId = null)
     {
         Loader::registerAutoloadClasses($moduleId, $classes);
     }
