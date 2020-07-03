@@ -58,7 +58,7 @@ class Autoload
      * @return array
      */
 
-    public static function setAutoloadClassesArray(string $directory, string $defaultNamespace, array $excludeFiles) : array
+    public static function prepareAutoloadClassesArray(string $directory, string $defaultNamespace, array $excludeFiles) : array
     {
         $result = [];    
         $scanner = self::scanDirectory($directory);
@@ -75,7 +75,7 @@ class Autoload
                     $classNamespace = $defaultNamespace . $sep . $key;
     
                     if($SplFileInfo->isDir()) {
-                        $tempResult = self::setAutoloadClassesArray($directory . '/' . $key, $classNamespace, $excludeFiles);
+                        $tempResult = self::prepareAutoloadClassesArray($directory . '/' . $key, $classNamespace, $excludeFiles);
                         foreach($tempResult as $class => $file) {
                             $result[$class] = $file;
                         }
